@@ -14,8 +14,9 @@ class StatisticsPage extends StatelessWidget {
         backgroundColor: AppColors.taxi,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream:
-            FirebaseFirestore.instance.collection('orderReports').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('orderStatistics')
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
@@ -23,22 +24,30 @@ class StatisticsPage extends StatelessWidget {
 
           final reports = snapshot.data!.docs;
 
-          final Map<String, int> userOrderCounts = {};
+          // Aggregating data by user
+          final Map<String, Map<String, int>> userOrderData = {};
 
-          // Count completed orders per user
           for (var report in reports) {
             final data = report.data() as Map<String, dynamic>;
             final email = data['completedBy'] as String;
+            final orderCount = data['orderCount'] as int;
+            final peopleCount = data['peopleCount'] as int;
 
-            if (userOrderCounts.containsKey(email)) {
-              userOrderCounts[email] = userOrderCounts[email]! + 1;
-            } else {
-              userOrderCounts[email] = 1;
+            if (!userOrderData.containsKey(email)) {
+              userOrderData[email] = {
+                'totalOrders': 0,
+                'totalPeople': 0,
+              };
             }
+
+            userOrderData[email]!['totalOrders'] =
+                userOrderData[email]!['totalOrders']! + orderCount;
+            userOrderData[email]!['totalPeople'] =
+                userOrderData[email]!['totalPeople']! + peopleCount;
           }
 
           return ListView(
-            children: userOrderCounts.entries.map((entry) {
+            children: userOrderData.entries.map((entry) {
               return Card(
                 margin: const EdgeInsets.all(10.0),
                 child: ListTile(
@@ -50,7 +59,7 @@ class StatisticsPage extends StatelessWidget {
                     ),
                   ),
                   subtitle: Text(
-                    'Buyurtmalar soni: ${entry.value}',
+                    'Buyurtmalar soni: ${entry.value['totalOrders']}\nOdamlar soni: ${entry.value['totalPeople']}',
                     style: AppStyle.fontStyle.copyWith(fontSize: 14),
                   ),
                 ),
