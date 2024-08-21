@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qoqontoshkent/screens/account_screen.dart';
-import 'package:qoqontoshkent/screens/acepted_order_page.dart';
 import 'package:qoqontoshkent/screens/civil_page.dart';
 import 'package:qoqontoshkent/screens/drivers_page.dart';
 import 'package:qoqontoshkent/screens/login_screen.dart';

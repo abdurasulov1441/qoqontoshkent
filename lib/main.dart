@@ -4,21 +4,13 @@ import 'package:qoqontoshkent/screens/account_screen.dart';
 import 'package:qoqontoshkent/screens/home_screen.dart';
 import 'package:qoqontoshkent/screens/login_screen.dart';
 import 'package:qoqontoshkent/screens/reset_password_screen.dart';
-import 'package:qoqontoshkent/screens/signup_screen.dart';
 import 'package:qoqontoshkent/screens/verify_email_screen.dart';
 import 'package:qoqontoshkent/services/firebase_streem.dart';
-
-// Firebase Авторизация - Сценарии:
-//    Войти - Почта / Пароль
-//    Личный кабинет
-//    Зарегистрироваться - Почта / Пароль два раза
-//        Подтвердить почту - Отправить письмо снова / Отменить
-//    Сбросить пароль - Почта
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp()); // Replace with your actual app widget
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
