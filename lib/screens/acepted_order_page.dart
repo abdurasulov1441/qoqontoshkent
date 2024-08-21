@@ -49,27 +49,33 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
     _showSnackBar('Buyurtma bekor qilindi');
   }
 
-  // Method to delete an order after completion
-  Future<void> _deleteOrder(String orderId) async {
+  // Method to finalize an order, log it to statistics, and then delete it
+  Future<void> _finalizeOrder(
+      String orderId, Map<String, dynamic> orderData) async {
+    final statsRef = FirebaseFirestore.instance.collection('orderStatistics');
     final orderRef =
         FirebaseFirestore.instance.collection('orders').doc(orderId);
     final driverRef =
         FirebaseFirestore.instance.collection('drivers').doc(_user!.uid);
 
     await FirebaseFirestore.instance.runTransaction((transaction) async {
-      final driverSnapshot = await transaction
-          .get(driverRef.collection('acceptedOrders').doc(orderId));
+      final driverEmail = _user!.email;
+      final peopleCount = orderData['peopleCount'];
 
-      if (driverSnapshot.exists) {
-        // Remove the order from the driver's accepted orders list
-        transaction.delete(driverSnapshot.reference);
-      }
+      // Log the order to the statistics collection
+      transaction.set(statsRef.doc(), {
+        'completedBy': driverEmail,
+        'orderCount': 1,
+        'peopleCount': peopleCount,
+        'completedAt': Timestamp.now(),
+      });
 
-      // Optionally, you can delete the order from the main orders collection as well
+      // Delete the order from the driver's accepted orders and the main orders collection
+      transaction.delete(driverRef.collection('acceptedOrders').doc(orderId));
       transaction.delete(orderRef);
     });
 
-    _showSnackBar('Buyurtma o\'chirildi');
+    _showSnackBar('Buyurtma yakunlandi va hisobotga qo\'shildi');
   }
 
   void _showSnackBar(String message) {
@@ -127,19 +133,21 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                           child: Text(
                             'Bekor qilish',
                             style: AppStyle.fontStyle.copyWith(
+                                fontSize: 12,
                                 color: AppColors.headerColor,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
                         const SizedBox(width: 10),
                         ElevatedButton(
-                          onPressed: () => _deleteOrder(order.id),
+                          onPressed: () => _finalizeOrder(order.id, orderData),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                           ),
                           child: Text(
-                            'Buyurtmani o\'chirish',
+                            'Buyurtmani yakunlash',
                             style: AppStyle.fontStyle.copyWith(
+                                fontSize: 12,
                                 color: AppColors.headerColor,
                                 fontWeight: FontWeight.bold),
                           ),

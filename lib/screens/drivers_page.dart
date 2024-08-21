@@ -87,35 +87,83 @@ class _DriverPageState extends State<DriverPage> {
               color: Colors.white,
               elevation: 5,
               margin: const EdgeInsets.all(10.0),
-              child: ListTile(
-                title: Text(
-                  '${orderData['fromLocation']} dan ${orderData['toLocation']} gacha',
-                  style: AppStyle.fontStyle.copyWith(fontSize: 12),
-                ),
-                subtitle: Column(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Odamlar: ${orderData['peopleCount']}',
-                      style: AppStyle.fontStyle.copyWith(fontSize: 12),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on,
+                          color: AppColors.taxi,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 5),
+                        Expanded(
+                          child: Text(
+                            '${orderData['fromLocation']} dan ${orderData['toLocation']} gacha',
+                            style: AppStyle.fontStyle.copyWith(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      'Vaqt: ${DateFormat('yyyy-MM-dd – HH:mm').format(orderData['orderTime'].toDate())}',
-                      style: AppStyle.fontStyle.copyWith(fontSize: 12),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.person,
+                          color: AppColors.taxi,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          'Odamlar: ${orderData['peopleCount']}',
+                          style: AppStyle.fontStyle.copyWith(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.access_time,
+                          color: AppColors.taxi,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          'Vaqt: ${DateFormat('yyyy-MM-dd – HH:mm').format(orderData['orderTime'].toDate())}',
+                          style: AppStyle.fontStyle.copyWith(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.taxi,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                        ),
+                        onPressed: () => _acceptOrder(order.id),
+                        child: Text(
+                          'Qabul qilish',
+                          style: AppStyle.fontStyle.copyWith(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
-                ),
-                trailing: ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: AppColors.taxi),
-                  onPressed: () => _acceptOrder(order.id),
-                  child: Text(
-                    'Qabul qilish',
-                    style: AppStyle.fontStyle.copyWith(
-                        fontSize: 12,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
                 ),
               ),
             );

@@ -4,6 +4,7 @@ import 'package:qoqontoshkent/screens/account_screen.dart';
 import 'package:qoqontoshkent/screens/civil_page.dart';
 import 'package:qoqontoshkent/screens/drivers_page.dart';
 import 'package:qoqontoshkent/screens/login_screen.dart';
+import 'package:qoqontoshkent/screens/statistics_page.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
 import 'package:qoqontoshkent/style/app_style.dart';
 
@@ -18,7 +19,15 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AppColors.backgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: AppColors.headerColor,
+        leading: TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const StatisticsPage()),
+              );
+            },
+            child: Icon(Icons.list_rounded)),
+        backgroundColor: AppColors.taxi,
         title: Text(
           'Asosiy sahifa',
           style: AppStyle.fontStyle
