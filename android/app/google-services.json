@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "321168056684",
+    "project_id": "qoqontoshkent-463b2",
+    "storage_bucket": "qoqontoshkent-463b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321168056684:android:c39db34114092634aad349",
+        "android_client_info": {
+          "package_name": "com.example.qoqontoshkent"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHh-Wf6Ej2LDB6JtwpGt4VdPHaM1H9CVU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
