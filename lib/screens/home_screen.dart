@@ -21,17 +21,25 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         leading: TextButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const StatisticsPage()),
-              );
+              if (user == null) {
+                null;
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const StatisticsPage()),
+                );
+              }
             },
-            child: Icon(Icons.list_rounded)),
+            child: Icon(
+              Icons.bar_chart,
+              color: Colors.white,
+            )),
         backgroundColor: AppColors.taxi,
         title: Text(
           'Asosiy sahifa',
-          style: AppStyle.fontStyle
-              .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+          style: AppStyle.fontStyle.copyWith(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         centerTitle: true,
         actions: [
@@ -52,48 +60,14 @@ class HomeScreen extends StatelessWidget {
             },
             icon: Icon(
               Icons.person,
-              color: (user == null) ? Colors.black : Colors.yellow,
+              color: (user == null) ? Colors.white : Colors.white,
             ),
           ),
         ],
       ),
       body: SafeArea(
-        child: Center(child: (user == null) ? const CivilPage() : DriverPage()
-            //child: Text('Контент для НЕ зарегистрированных в системе',),
-            ),
+        child: Center(child: (user == null) ? const CivilPage() : DriverPage()),
       ),
     );
   }
 }
-
-// class DrawerSimple extends StatelessWidget {
-//   const DrawerSimple({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final user = FirebaseAuth.instance.currentUser;
-//     return Column(
-//       children: [
-//         SizedBox(
-//           height: 50,
-//         ),
-//         (user == null)
-//             ? TextButton(
-//                 onPressed: () {},
-//                 child: Text('user'),
-//               )
-//             : TextButton(
-//                 onPressed: () {
-//                   Navigator.pop(context);
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                         builder: (context) => const AcceptedOrdersPage()),
-//                   );
-//                 },
-//                 child: Text('Qabul qilingan buyurtmalar'),
-//               )
-//       ],
-//     );
-//   }
-// }

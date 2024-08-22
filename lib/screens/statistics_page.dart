@@ -9,8 +9,21 @@ class StatisticsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Foydalanuvchilar Statistikasi'),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            )),
+        title: Text(
+          'Foydalanuvchilar Statistikasi',
+          style: AppStyle.fontStyle.copyWith(
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: AppColors.taxi,
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -24,7 +37,6 @@ class StatisticsPage extends StatelessWidget {
 
           final reports = snapshot.data!.docs;
 
-          // Aggregating data by user
           final Map<String, Map<String, int>> userOrderData = {};
 
           for (var report in reports) {
@@ -49,6 +61,8 @@ class StatisticsPage extends StatelessWidget {
           return ListView(
             children: userOrderData.entries.map((entry) {
               return Card(
+                color: Colors.white,
+                elevation: 5,
                 margin: const EdgeInsets.all(10.0),
                 child: ListTile(
                   title: Text(

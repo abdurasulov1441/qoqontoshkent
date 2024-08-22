@@ -22,7 +22,6 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
     _user = _auth.currentUser;
   }
 
-  // Method to reject an order
   Future<void> _rejectOrder(String orderId) async {
     final orderRef =
         FirebaseFirestore.instance.collection('orders').doc(orderId);
@@ -35,7 +34,6 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
           .get(driverRef.collection('acceptedOrders').doc(orderId));
 
       if (orderSnapshot.exists && driverSnapshot.exists) {
-        // Revert the order to pending and remove it from the driver's list
         transaction.update(orderRef, {
           'status': 'pending',
           'driverId': null,
@@ -49,7 +47,6 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
     _showSnackBar('Buyurtma bekor qilindi');
   }
 
-  // Method to finalize an order, log it to statistics, and then delete it
   Future<void> _finalizeOrder(
       String orderId, Map<String, dynamic> orderData) async {
     final statsRef = FirebaseFirestore.instance.collection('orderStatistics');
@@ -62,7 +59,6 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
       final driverEmail = _user!.email;
       final peopleCount = orderData['peopleCount'];
 
-      // Log the order to the statistics collection
       transaction.set(statsRef.doc(), {
         'completedBy': driverEmail,
         'orderCount': 1,
@@ -70,7 +66,6 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
         'completedAt': Timestamp.now(),
       });
 
-      // Delete the order from the driver's accepted orders and the main orders collection
       transaction.delete(driverRef.collection('acceptedOrders').doc(orderId));
       transaction.delete(orderRef);
     });
@@ -106,6 +101,8 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
             final orderData = order.data() as Map<String, dynamic>;
 
             return Card(
+              color: Colors.white,
+              elevation: 5,
               margin: const EdgeInsets.all(10.0),
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -128,10 +125,13 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                         ElevatedButton(
                           onPressed: () => _rejectOrder(order.id),
                           style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
                             backgroundColor: Colors.red,
                           ),
                           child: Text(
-                            'Bekor qilish',
+                            'Orqaga qaytarish',
                             style: AppStyle.fontStyle.copyWith(
                                 fontSize: 12,
                                 color: AppColors.headerColor,
@@ -142,6 +142,9 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                         ElevatedButton(
                           onPressed: () => _finalizeOrder(order.id, orderData),
                           style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
                             backgroundColor: Colors.green,
                           ),
                           child: Text(

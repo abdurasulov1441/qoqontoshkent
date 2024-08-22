@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
+import 'package:qoqontoshkent/style/app_style.dart';
 
 class CivilPage extends StatefulWidget {
   const CivilPage({super.key});
@@ -235,8 +236,16 @@ class _CivilPageState extends State<CivilPage> {
           const SizedBox(height: 30),
           ElevatedButton(
             onPressed: _submitData,
-            child: const Text('Yuborish'),
+            child: Text(
+              'Yuborish',
+              style: AppStyle.fontStyle.copyWith(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold),
+            ),
             style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
               backgroundColor: AppColors.taxi,
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               textStyle: const TextStyle(fontSize: 18),
@@ -250,7 +259,6 @@ class _CivilPageState extends State<CivilPage> {
     );
   }
 
-  // Widget to build location container
   Widget _buildLocationContainer(String label, String location) {
     return Container(
       width: double.infinity,
@@ -270,9 +278,7 @@ class _CivilPageState extends State<CivilPage> {
       child: Text(
         '$label: $location',
         style: const TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-        ),
+            color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
       ),
     );
   }
