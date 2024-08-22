@@ -55,6 +55,6 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
           ],
         ),
-        body: AcceptedOrdersPage());
+        body: Text('empty'));
   }
 }

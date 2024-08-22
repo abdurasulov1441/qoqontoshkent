@@ -1,9 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:qoqontoshkent/screens/acepted_order_page.dart';
+import 'package:qoqontoshkent/screens/chat_page.dart';
+import 'package:qoqontoshkent/screens/orders.dart';
+import 'package:qoqontoshkent/screens/statistics_page.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
-import 'package:qoqontoshkent/style/app_style.dart';
 
 class DriverPage extends StatefulWidget {
   const DriverPage({super.key});
@@ -14,165 +15,63 @@ class DriverPage extends StatefulWidget {
 
 class _DriverPageState extends State<DriverPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  late User? _user;
+  int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _user = _auth.currentUser;
-  }
-
-  Future<void> _acceptOrder(String orderId) async {
-    if (_user == null) {
-      _showSnackBar('User not authenticated');
-      return;
-    }
-
-    final orderRef =
-        FirebaseFirestore.instance.collection('orders').doc(orderId);
-    final driverRef =
-        FirebaseFirestore.instance.collection('drivers').doc(_user!.uid);
-
-    await FirebaseFirestore.instance.runTransaction((transaction) async {
-      final orderSnapshot = await transaction.get(orderRef);
-
-      if (orderSnapshot.exists && orderSnapshot['status'] == 'pending') {
-        // Update the order status and assign it to the current driver
-        transaction.update(orderRef, {
-          'status': 'accepted',
-          'driverId': _user!.uid,
-          'driverEmail': _user!.email,
-        });
-
-        // Add the order to the driver's specific list
-        transaction.set(driverRef.collection('acceptedOrders').doc(orderId),
-            orderSnapshot.data()!);
-      }
-    });
-
-    if (mounted) {
-      _showSnackBar('Buyurtma qabul qilindi');
-    }
-  }
-
-  void _showSnackBar(String message) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('orders')
-          .where('status', isEqualTo: 'pending')
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final orders = snapshot.data!.docs;
-
-        return ListView.builder(
-          itemCount: orders.length,
-          itemBuilder: (context, index) {
-            final order = orders[index];
-            final orderData = order.data() as Map<String, dynamic>;
-
-            return Card(
-              color: Colors.white,
-              elevation: 5,
-              margin: const EdgeInsets.all(10.0),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.location_on,
-                          color: AppColors.taxi,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 5),
-                        Expanded(
-                          child: Text(
-                            '${orderData['fromLocation']} dan ${orderData['toLocation']} gacha',
-                            style: AppStyle.fontStyle.copyWith(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.person,
-                          color: AppColors.taxi,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          'Odamlar: ${orderData['peopleCount']}',
-                          style: AppStyle.fontStyle.copyWith(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.access_time,
-                          color: AppColors.taxi,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          'Vaqt: ${DateFormat('yyyy-MM-dd – HH:mm').format(orderData['orderTime'].toDate())}',
-                          style: AppStyle.fontStyle.copyWith(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          backgroundColor: AppColors.taxi,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 10,
-                          ),
-                        ),
-                        onPressed: () => _acceptOrder(order.id),
-                        child: Text(
-                          'Qabul qilish',
-                          style: AppStyle.fontStyle.copyWith(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
+    return Scaffold(
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          Orders(),
+          AcceptedOrdersPage(),
+          StatisticsPage(),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'Buyurtmalar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.check),
+            label: 'Qabul qilingan',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.stacked_bar_chart),
+            label: 'Statistika',
+          ),
+        ],
+        selectedItemColor: AppColors.taxi,
+      ),
+      floatingActionButton: FloatingActionButton(
+        elevation: 5,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(30))),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ChatPage()),
+          );
+        },
+        child: Icon(
+          Icons.chat,
+          color: AppColors.taxi,
+        ),
+      ),
     );
   }
 }

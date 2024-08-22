@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:qoqontoshkent/screens/account_screen.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
 import 'package:qoqontoshkent/style/app_style.dart';
 
@@ -8,19 +10,27 @@ class StatisticsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
+        actions: [
+          IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AccountScreen()),
+              );
             },
             icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-            )),
+              Icons.person,
+              color: (user == null) ? Colors.white : Colors.white,
+            ),
+          ),
+        ],
+        centerTitle: true,
         title: Text(
-          'Foydalanuvchilar Statistikasi',
+          'Statistika',
           style: AppStyle.fontStyle.copyWith(
               color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
         ),

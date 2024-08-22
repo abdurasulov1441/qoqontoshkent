@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:qoqontoshkent/screens/account_screen.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
 import 'package:qoqontoshkent/style/app_style.dart';
 
@@ -81,89 +82,116 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('drivers')
-          .doc(_user!.uid)
-          .collection('acceptedOrders')
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    final user = FirebaseAuth.instance.currentUser;
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Qabul qilingan arizalar',
+          style: AppStyle.fontStyle.copyWith(
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AccountScreen()),
+              );
+            },
+            icon: Icon(
+              Icons.person,
+              color: (user == null) ? Colors.white : Colors.white,
+            ),
+          ),
+        ],
+        backgroundColor: AppColors.taxi,
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('drivers')
+            .doc(_user!.uid)
+            .collection('acceptedOrders')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        final orders = snapshot.data!.docs;
+          final orders = snapshot.data!.docs;
 
-        return ListView.builder(
-          itemCount: orders.length,
-          itemBuilder: (context, index) {
-            final order = orders[index];
-            final orderData = order.data() as Map<String, dynamic>;
+          return ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              final order = orders[index];
+              final orderData = order.data() as Map<String, dynamic>;
 
-            return Card(
-              color: Colors.white,
-              elevation: 5,
-              margin: const EdgeInsets.all(10.0),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${orderData['fromLocation']} dan ${orderData['toLocation']} gacha',
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10),
-                    Text('Odamlar soni: ${orderData['peopleCount']}'),
-                    Text('Telefon: ${orderData['phoneNumber']}'),
-                    Text(
-                        'Ketish vaqti: ${DateFormat('yyyy-MM-dd – HH:mm').format(orderData['orderTime'].toDate())}'),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => _rejectOrder(order.id),
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
-                            backgroundColor: Colors.red,
+              return Card(
+                color: Colors.white,
+                elevation: 5,
+                margin: const EdgeInsets.all(10.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${orderData['fromLocation']} dan ${orderData['toLocation']} gacha',
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 10),
+                      Text('Odamlar soni: ${orderData['peopleCount']}'),
+                      Text('Telefon: ${orderData['phoneNumber']}'),
+                      Text(
+                          'Ketish vaqti: ${DateFormat('yyyy-MM-dd – HH:mm').format(orderData['orderTime'].toDate())}'),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () => _rejectOrder(order.id),
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))),
+                              backgroundColor: Colors.red,
+                            ),
+                            child: Text(
+                              'Qaytarish',
+                              style: AppStyle.fontStyle.copyWith(
+                                  fontSize: 12,
+                                  color: AppColors.headerColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
-                          child: Text(
-                            'Qaytarish',
-                            style: AppStyle.fontStyle.copyWith(
-                                fontSize: 12,
-                                color: AppColors.headerColor,
-                                fontWeight: FontWeight.bold),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: () =>
+                                _finalizeOrder(order.id, orderData),
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))),
+                              backgroundColor: Colors.green,
+                            ),
+                            child: Text(
+                              'Yakunlash',
+                              style: AppStyle.fontStyle.copyWith(
+                                  fontSize: 12,
+                                  color: AppColors.headerColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        ElevatedButton(
-                          onPressed: () => _finalizeOrder(order.id, orderData),
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
-                            backgroundColor: Colors.green,
-                          ),
-                          child: Text(
-                            'Yakunlash',
-                            style: AppStyle.fontStyle.copyWith(
-                                fontSize: 12,
-                                color: AppColors.headerColor,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-        );
-      },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

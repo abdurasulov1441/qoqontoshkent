@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:qoqontoshkent/screens/login_screen.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
 import 'package:qoqontoshkent/style/app_style.dart';
 
@@ -170,91 +172,118 @@ class _CivilPageState extends State<CivilPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          _buildLocationContainer('Qayerdan', fromLocation),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _swapLocations,
-            child: const Icon(
-              Icons.swap_calls,
-              color: Colors.black,
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.taxi,
-              shape: const CircleBorder(),
-              padding: const EdgeInsets.all(16),
-            ),
-          ),
-          const SizedBox(height: 20),
-          _buildLocationContainer('Qayerga', toLocation),
-          const SizedBox(height: 20),
-          _buildDropdown(
-            label: 'Vaqtni tanlang',
-            value: _selectedPeriod,
-            items: _periodOptions,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedPeriod = newValue!;
-                _selectedDateTime = null; // Reset selected date and time
-              });
-              if (_selectedPeriod == 'Boshqa vaqt') {
-                _pickDateTime();
-              } else if (_selectedPeriod == 'Bugun' ||
-                  _selectedPeriod == 'Ertaga') {
-                _pickTime();
-              }
+    final user = FirebaseAuth.instance.currentUser;
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Asosiy sahifa',
+          style: AppStyle.fontStyle.copyWith(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: AppColors.taxi,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+              );
             },
-          ),
-          if ((_selectedPeriod == 'Bugun' ||
-                  _selectedPeriod == 'Ertaga' ||
-                  _selectedPeriod == 'Boshqa vaqt') &&
-              _selectedDateTime != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: _buildDateTimeDisplay(),
-            ),
-          const SizedBox(height: 20),
-          _buildDropdown(
-            label: 'Odamlar soni',
-            value: _selectedPeople,
-            items: _peopleOptions,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedPeople = newValue!;
-              });
-            },
-          ),
-          const SizedBox(height: 20),
-          _buildTextField(
-            controller: _phoneController,
-            hintText: 'Telefon raqamingizni kiriting',
-            keyboardType: TextInputType.phone,
-          ),
-          const SizedBox(height: 30),
-          ElevatedButton(
-            onPressed: _submitData,
-            child: Text(
-              'Yuborish',
-              style: AppStyle.fontStyle.copyWith(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold),
-            ),
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
-              backgroundColor: AppColors.taxi,
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-              textStyle: const TextStyle(fontSize: 18),
+            icon: Icon(
+              Icons.person,
+              color: (user == null) ? Colors.white : Colors.white,
             ),
           ),
-          const SizedBox(
-            height: 150,
-          )
         ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            _buildLocationContainer('Qayerdan', fromLocation),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _swapLocations,
+              child: const Icon(
+                Icons.swap_calls,
+                color: Colors.black,
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.taxi,
+                shape: const CircleBorder(),
+                padding: const EdgeInsets.all(16),
+              ),
+            ),
+            const SizedBox(height: 20),
+            _buildLocationContainer('Qayerga', toLocation),
+            const SizedBox(height: 20),
+            _buildDropdown(
+              label: 'Vaqtni tanlang',
+              value: _selectedPeriod,
+              items: _periodOptions,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedPeriod = newValue!;
+                  _selectedDateTime = null; // Reset selected date and time
+                });
+                if (_selectedPeriod == 'Boshqa vaqt') {
+                  _pickDateTime();
+                } else if (_selectedPeriod == 'Bugun' ||
+                    _selectedPeriod == 'Ertaga') {
+                  _pickTime();
+                }
+              },
+            ),
+            if ((_selectedPeriod == 'Bugun' ||
+                    _selectedPeriod == 'Ertaga' ||
+                    _selectedPeriod == 'Boshqa vaqt') &&
+                _selectedDateTime != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: _buildDateTimeDisplay(),
+              ),
+            const SizedBox(height: 20),
+            _buildDropdown(
+              label: 'Odamlar soni',
+              value: _selectedPeople,
+              items: _peopleOptions,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedPeople = newValue!;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+            _buildTextField(
+              controller: _phoneController,
+              hintText: 'Telefon raqamingizni kiriting',
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: _submitData,
+              child: Text(
+                'Yuborish',
+                style: AppStyle.fontStyle.copyWith(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold),
+              ),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                backgroundColor: AppColors.taxi,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                textStyle: const TextStyle(fontSize: 18),
+              ),
+            ),
+            const SizedBox(
+              height: 150,
+            )
+          ],
+        ),
       ),
     );
   }
