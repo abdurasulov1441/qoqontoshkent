@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qoqontoshkent/screens/account_screen.dart';
+import 'package:qoqontoshkent/screens/chat_page.dart';
 import 'package:qoqontoshkent/screens/civil_page.dart';
 import 'package:qoqontoshkent/screens/drivers_page.dart';
 import 'package:qoqontoshkent/screens/login_screen.dart';
+import 'package:qoqontoshkent/screens/profile_set_up.dart';
 import 'package:qoqontoshkent/screens/statistics_page.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
 import 'package:qoqontoshkent/style/app_style.dart';
@@ -43,6 +45,28 @@ class HomeScreen extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChatPage()),
+                );
+              },
+              icon: Icon(
+                Icons.chat,
+                color: Colors.white,
+              )),
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                );
+              },
+              icon: Icon(
+                Icons.edit,
+                color: Colors.white,
+              )),
           IconButton(
             onPressed: () {
               if ((user == null)) {
