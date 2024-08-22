@@ -1,4 +1,4 @@
-package com.example.qoqontoshkent
+package uz.qoqon.toshkent
 
 import io.flutter.embedding.android.FlutterActivity
 

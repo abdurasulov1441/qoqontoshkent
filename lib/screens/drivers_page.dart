@@ -146,6 +146,9 @@ class _DriverPageState extends State<DriverPage> {
                       alignment: Alignment.centerRight,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
                           backgroundColor: AppColors.taxi,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 20,

@@ -63,7 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '321168056684',
     projectId: 'qoqontoshkent-463b2',
     storageBucket: 'qoqontoshkent-463b2.appspot.com',
-    iosBundleId: 'com.example.qoqontoshkent',
+    iosBundleId: 'uz.qoqon.toshkent',
   );
-
 }

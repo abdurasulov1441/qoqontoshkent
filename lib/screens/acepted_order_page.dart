@@ -131,7 +131,7 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                             backgroundColor: Colors.red,
                           ),
                           child: Text(
-                            'Orqaga qaytarish',
+                            'Qaytarish',
                             style: AppStyle.fontStyle.copyWith(
                                 fontSize: 12,
                                 color: AppColors.headerColor,
@@ -148,7 +148,7 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                             backgroundColor: Colors.green,
                           ),
                           child: Text(
-                            'Buyurtmani yakunlash',
+                            'Yakunlash',
                             style: AppStyle.fontStyle.copyWith(
                                 fontSize: 12,
                                 color: AppColors.headerColor,
