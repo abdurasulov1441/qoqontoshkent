@@ -1,9 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:qoqontoshkent/screens/acepted_order_page.dart';
-import 'package:qoqontoshkent/screens/chat_page.dart';
-import 'package:qoqontoshkent/screens/orders.dart';
-import 'package:qoqontoshkent/screens/statistics_page.dart';
+import 'package:qoqontoshkent/screens/drivers/acepted_order_page.dart';
+import 'package:qoqontoshkent/screens/drivers/chat_page.dart';
+import 'package:qoqontoshkent/screens/drivers/orders.dart';
+import 'package:qoqontoshkent/screens/drivers/statistics_page.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
 
 class DriverPage extends StatefulWidget {
@@ -14,7 +13,6 @@ class DriverPage extends StatefulWidget {
 }
 
 class _DriverPageState extends State<DriverPage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   int _currentIndex = 0;
 
   @override

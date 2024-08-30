@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:qoqontoshkent/screens/account_screen.dart';
-import 'package:qoqontoshkent/screens/chat_page.dart';
+import 'package:qoqontoshkent/screens/drivers/account_screen.dart';
+import 'package:qoqontoshkent/screens/drivers/chat_page.dart';
 import 'package:qoqontoshkent/screens/home_screen.dart';
-import 'package:qoqontoshkent/screens/login_screen.dart';
-import 'package:qoqontoshkent/screens/profile_set_up.dart';
-import 'package:qoqontoshkent/screens/reset_password_screen.dart';
-import 'package:qoqontoshkent/screens/verify_email_screen.dart';
+import 'package:qoqontoshkent/screens/sign/login_screen.dart';
+import 'package:qoqontoshkent/screens/drivers/profile_set_up.dart';
+import 'package:qoqontoshkent/screens/sign/reset_password_screen.dart';
+import 'package:qoqontoshkent/screens/sign/verify_email_screen.dart';
 import 'package:qoqontoshkent/services/firebase_streem.dart';
 
 void main() async {
@@ -32,8 +32,6 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/account': (context) => const AccountScreen(),
         '/login': (context) => const LoginScreen(),
-        '/reset_password': (context) => const ResetPasswordScreen(),
-        '/verify_email': (context) => const VerifyEmailScreen(),
         '/profile': (context) => ProfilePage(),
         '/chat': (context) => ChatPage(),
       },

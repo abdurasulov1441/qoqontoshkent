@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:qoqontoshkent/screens/account_screen.dart';
+import 'package:qoqontoshkent/screens/drivers/account_screen.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
 import 'package:qoqontoshkent/style/app_style.dart';
 

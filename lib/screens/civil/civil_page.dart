@@ -2,18 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:qoqontoshkent/screens/login_screen.dart';
+import 'package:qoqontoshkent/screens/sign/login_screen.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
 import 'package:qoqontoshkent/style/app_style.dart';
 
-class CivilPage extends StatefulWidget {
-  const CivilPage({super.key});
+class MainCivilPage extends StatefulWidget {
+  const MainCivilPage({super.key});
 
   @override
   _CivilPageState createState() => _CivilPageState();
 }
 
-class _CivilPageState extends State<CivilPage> {
+class _CivilPageState extends State<MainCivilPage> {
   // Location variables
   String fromLocation = 'Qo‘qon';
   String toLocation = 'Toshkent';
@@ -31,12 +31,15 @@ class _CivilPageState extends State<CivilPage> {
   ];
   final List<String> _peopleOptions = ['Tanlanmadi', '1', '2', '3', '4'];
 
-  // Selected values
+  
   String _selectedPeriod = 'Tanlanmadi';
   String _selectedPeople = 'Tanlanmadi';
   DateTime? _selectedDateTime;
 
-  // Method to swap locations
+
+  int _currentIndex = 0;
+
+ 
   void _swapLocations() {
     setState(() {
       final temp = fromLocation;
@@ -174,6 +177,7 @@ class _CivilPageState extends State<CivilPage> {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -284,6 +288,33 @@ class _CivilPageState extends State<CivilPage> {
             )
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index;
+            // You can add navigation logic based on the selected index
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart),
+            label: 'Statistika',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_taxi),
+            label: 'Taksi',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_shipping),
+            label: 'Dostavka',
+          ),
+        ],
+        selectedItemColor: AppColors.taxi,
+        unselectedItemColor: Colors.grey,
+        backgroundColor: Colors.white,
+        showUnselectedLabels: true,
       ),
     );
   }

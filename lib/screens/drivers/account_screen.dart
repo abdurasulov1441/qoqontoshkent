@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:qoqontoshkent/screens/acepted_order_page.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
 import 'package:qoqontoshkent/style/app_style.dart';
 

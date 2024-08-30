@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:qoqontoshkent/screens/voice_managment.dart';
+import 'package:qoqontoshkent/screens/drivers/voice_managment.dart';
 import 'dart:io';
 
 import 'package:qoqontoshkent/style/app_colors.dart';
