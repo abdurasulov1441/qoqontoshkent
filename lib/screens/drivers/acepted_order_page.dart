@@ -58,16 +58,23 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
 
     await FirebaseFirestore.instance.runTransaction((transaction) async {
       final driverEmail = _user!.email;
-      final peopleCount = orderData['peopleCount'];
+      final peopleCount = orderData['peopleCount'] ?? 0;
+      final orderType = orderData['orderType'] ?? 'unknown';
+      final itemDescription = orderData['itemDescription'] ?? '';
 
+      // Store the statistics in the `orderStatistics` collection
       transaction.set(statsRef.doc(), {
         'completedBy': driverEmail,
         'orderCount': 1,
         'peopleCount': peopleCount,
+        'orderType': orderType,
+        'itemDescription': itemDescription,
         'completedAt': Timestamp.now(),
       });
 
+      // Remove the order from the driver's accepted orders
       transaction.delete(driverRef.collection('acceptedOrders').doc(orderId));
+      // Remove the order from the main `orders` collection
       transaction.delete(orderRef);
     });
 
@@ -125,6 +132,7 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
             itemBuilder: (context, index) {
               final order = orders[index];
               final orderData = order.data() as Map<String, dynamic>;
+              final orderType = orderData['orderType'];
 
               return Card(
                 color: Colors.white,
@@ -141,7 +149,9 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 10),
-                      Text('Odamlar soni: ${orderData['peopleCount']}'),
+                      orderType == 'taksi'
+                          ? Text('Odamlar soni: ${orderData['peopleCount']}')
+                          : Text('Dostavka: ${orderData['itemDescription']}'),
                       Text('Telefon: ${orderData['phoneNumber']}'),
                       Text(
                           'Ketish vaqti: ${DateFormat('yyyy-MM-dd – HH:mm').format(orderData['orderTime'].toDate())}'),

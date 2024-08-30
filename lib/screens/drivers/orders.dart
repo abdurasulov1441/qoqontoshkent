@@ -14,9 +14,15 @@ class Orders extends StatefulWidget {
 }
 
 class _OrdersState extends State<Orders> {
-  late User? _user;
+  User? _user;
 
-  Future<void> _acceptOrder(String orderId) async {
+  @override
+  void initState() {
+    super.initState();
+    _user = FirebaseAuth.instance.currentUser;
+  }
+
+  Future<void> _acceptOrder(String orderId, String orderType) async {
     if (_user == null) {
       _showSnackBar('User not authenticated');
       return;
@@ -38,7 +44,6 @@ class _OrdersState extends State<Orders> {
           'driverEmail': _user!.email,
         });
 
-        // Add the order to the driver's specific list
         transaction.set(driverRef.collection('acceptedOrders').doc(orderId),
             orderSnapshot.data()!);
       }
@@ -59,7 +64,6 @@ class _OrdersState extends State<Orders> {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -79,7 +83,7 @@ class _OrdersState extends State<Orders> {
             },
             icon: Icon(
               Icons.person,
-              color: (user == null) ? Colors.white : Colors.white,
+              color: (_user == null) ? Colors.white : Colors.white,
             ),
           ),
         ],
@@ -101,6 +105,7 @@ class _OrdersState extends State<Orders> {
             itemBuilder: (context, index) {
               final order = orders[index];
               final orderData = order.data() as Map<String, dynamic>;
+              final orderType = orderData['orderType'];
 
               return Card(
                 color: Colors.white,
@@ -133,14 +138,18 @@ class _OrdersState extends State<Orders> {
                       const SizedBox(height: 10),
                       Row(
                         children: [
-                          const Icon(
-                            Icons.person,
+                          Icon(
+                            orderType == 'taksi'
+                                ? Icons.person
+                                : Icons.local_shipping,
                             color: AppColors.taxi,
                             size: 20,
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            'Odamlar: ${orderData['peopleCount']}',
+                            orderType == 'taksi'
+                                ? 'Odamlar: ${orderData['peopleCount']}'
+                                : 'Dostavka: ${orderData['itemDescription']}',
                             style: AppStyle.fontStyle.copyWith(fontSize: 12),
                           ),
                         ],
@@ -174,7 +183,7 @@ class _OrdersState extends State<Orders> {
                               vertical: 10,
                             ),
                           ),
-                          onPressed: () => _acceptOrder(order.id),
+                          onPressed: () => _acceptOrder(order.id, orderType),
                           child: Text(
                             'Qabul qilish',
                             style: AppStyle.fontStyle.copyWith(

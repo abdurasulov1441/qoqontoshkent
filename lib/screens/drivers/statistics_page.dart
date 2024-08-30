@@ -47,25 +47,31 @@ class StatisticsPage extends StatelessWidget {
 
           final reports = snapshot.data!.docs;
 
-          final Map<String, Map<String, int>> userOrderData = {};
+          final Map<String, Map<String, dynamic>> userOrderData = {};
 
           for (var report in reports) {
             final data = report.data() as Map<String, dynamic>;
             final email = data['completedBy'] as String;
             final orderCount = data['orderCount'] as int;
-            final peopleCount = data['peopleCount'] as int;
+            final peopleCount = data['peopleCount'] ?? 0;
+            final orderType = data['orderType'] ?? '';
 
             if (!userOrderData.containsKey(email)) {
               userOrderData[email] = {
                 'totalOrders': 0,
                 'totalPeople': 0,
+                'totalDeliveries': 0,
               };
             }
 
-            userOrderData[email]!['totalOrders'] =
-                userOrderData[email]!['totalOrders']! + orderCount;
-            userOrderData[email]!['totalPeople'] =
-                userOrderData[email]!['totalPeople']! + peopleCount;
+            // Counting orders based on the orderType
+            if (orderType == 'taksi') {
+              userOrderData[email]!['totalOrders'] += orderCount;
+              userOrderData[email]!['totalPeople'] += peopleCount;
+            } else if (orderType == 'dostavka') {
+              userOrderData[email]!['totalDeliveries'] += orderCount;
+              userOrderData[email]!['totalOrders'] += orderCount;
+            }
           }
 
           return ListView(
@@ -83,7 +89,9 @@ class StatisticsPage extends StatelessWidget {
                     ),
                   ),
                   subtitle: Text(
-                    'Buyurtmalar soni: ${entry.value['totalOrders']}\nOdamlar soni: ${entry.value['totalPeople']}',
+                    'Jami buyurtmalar soni: ${entry.value['totalOrders']}\n'
+                    'Odamlar soni: ${entry.value['totalPeople']}\n'
+                    'Dostavka soni: ${entry.value['totalDeliveries']}',
                     style: AppStyle.fontStyle.copyWith(fontSize: 14),
                   ),
                 ),

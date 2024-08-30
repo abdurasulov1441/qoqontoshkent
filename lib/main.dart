@@ -5,8 +5,6 @@ import 'package:qoqontoshkent/screens/drivers/chat_page.dart';
 import 'package:qoqontoshkent/screens/home_screen.dart';
 import 'package:qoqontoshkent/screens/sign/login_screen.dart';
 import 'package:qoqontoshkent/screens/drivers/profile_set_up.dart';
-import 'package:qoqontoshkent/screens/sign/reset_password_screen.dart';
-import 'package:qoqontoshkent/screens/sign/verify_email_screen.dart';
 import 'package:qoqontoshkent/services/firebase_streem.dart';
 
 void main() async {
