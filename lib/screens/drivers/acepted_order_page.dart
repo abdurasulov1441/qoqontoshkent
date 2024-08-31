@@ -134,6 +134,10 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
               final orderData = order.data() as Map<String, dynamic>;
               final orderType = orderData['orderType'];
 
+              // Добавляем 5 часов к orderTime
+              final orderTime = orderData['orderTime'].toDate();
+              final orderTimeInUtcPlus5 = orderTime.add(Duration(hours: 5));
+
               return Card(
                 color: Colors.white,
                 elevation: 5,
@@ -154,7 +158,7 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                           : Text('Dostavka: ${orderData['itemDescription']}'),
                       Text('Telefon: ${orderData['phoneNumber']}'),
                       Text(
-                          'Ketish vaqti: ${DateFormat('yyyy-MM-dd – HH:mm').format(orderData['orderTime'].toDate())}'),
+                          'Ketish vaqti: ${DateFormat('yyyy-MM-dd – HH:mm').format(orderTimeInUtcPlus5)}'),
                       const SizedBox(height: 10),
                       Row(
                         children: [

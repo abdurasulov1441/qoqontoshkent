@@ -107,6 +107,10 @@ class _OrdersState extends State<Orders> {
               final orderData = order.data() as Map<String, dynamic>;
               final orderType = orderData['orderType'];
 
+              // Добавляем 5 часов к orderTime
+              final orderTime = orderData['orderTime'].toDate();
+              final orderTimeInUtcPlus5 = orderTime.add(Duration(hours: 5));
+
               return Card(
                 color: Colors.white,
                 elevation: 5,
@@ -164,7 +168,7 @@ class _OrdersState extends State<Orders> {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            'Vaqt: ${DateFormat('yyyy-MM-dd – HH:mm').format(orderData['orderTime'].toDate())}',
+                            'Vaqt: ${DateFormat('yyyy-MM-dd – HH:mm').format(orderTimeInUtcPlus5)}',
                             style: AppStyle.fontStyle.copyWith(fontSize: 12),
                           ),
                         ],
