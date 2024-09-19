@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:qoqontoshkent/screens/drivers/acepted_order_page.dart';
-import 'package:qoqontoshkent/screens/drivers/chat_page.dart';
 import 'package:qoqontoshkent/screens/drivers/orders.dart';
 import 'package:qoqontoshkent/screens/drivers/statistics_page.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
@@ -54,22 +53,22 @@ class _DriverPageState extends State<DriverPage> {
         ],
         selectedItemColor: AppColors.taxi,
       ),
-      floatingActionButton: FloatingActionButton(
-        elevation: 5,
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(30))),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ChatPage()),
-          );
-        },
-        child: Icon(
-          Icons.chat,
-          color: AppColors.taxi,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   elevation: 5,
+      //   backgroundColor: Colors.white,
+      //   shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.all(Radius.circular(30))),
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => ChatPage()),
+      //     );
+      //   },
+      //   child: Icon(
+      //     Icons.chat,
+      //     color: AppColors.taxi,
+      //   ),
+      // ),
     );
   }
 }
