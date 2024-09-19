@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
 import 'package:qoqontoshkent/style/app_style.dart';
+import 'package:flutter/services.dart';
+import 'dart:math';
 
 class DeliveryPage extends StatefulWidget {
   const DeliveryPage({super.key});
@@ -15,7 +17,8 @@ class _DeliveryPageState extends State<DeliveryPage> {
   String fromLocation = 'Qo‘qon';
   String toLocation = 'Toshkent';
 
-  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _phoneController =
+      TextEditingController(text: '+998 ');
   final TextEditingController _itemController = TextEditingController();
 
   final List<String> _periodOptions = [
@@ -28,6 +31,44 @@ class _DeliveryPageState extends State<DeliveryPage> {
 
   String _selectedPeriod = 'Tanlanmadi';
   DateTime? _selectedDateTime;
+
+  // Phone number formatter similar to the SignUpScreen
+  final _phoneNumberFormatter = TextInputFormatter.withFunction(
+    (oldValue, newValue) {
+      if (!newValue.text.startsWith('+998 ')) {
+        return oldValue;
+      }
+
+      String text = newValue.text.substring(5).replaceAll(RegExp(r'\D'), '');
+
+      if (text.length > 9) {
+        text = text.substring(0, 9);
+      }
+
+      StringBuffer formatted = StringBuffer('+998 ');
+      int selectionIndex = newValue.selection.baseOffset;
+
+      if (text.length > 0)
+        formatted.write('(${text.substring(0, min(2, text.length))}');
+      if (text.length > 2)
+        formatted.write(') ${text.substring(2, min(5, text.length))}');
+      if (text.length > 5)
+        formatted.write(' ${text.substring(5, min(7, text.length))}');
+      if (text.length > 7)
+        formatted.write(' ${text.substring(7, text.length)}');
+
+      selectionIndex = formatted.length;
+
+      if (newValue.selection.baseOffset < 5) {
+        selectionIndex = 5;
+      }
+
+      return TextEditingValue(
+        text: formatted.toString(),
+        selection: TextSelection.collapsed(offset: selectionIndex),
+      );
+    },
+  );
 
   void _swapLocations() {
     setState(() {
@@ -218,6 +259,9 @@ class _DeliveryPageState extends State<DeliveryPage> {
               controller: _phoneController,
               hintText: 'Telefon raqamingizni kiriting',
               keyboardType: TextInputType.phone,
+              inputFormatters: [
+                _phoneNumberFormatter
+              ], // Apply phone formatter here
             ),
             const SizedBox(height: 30),
             ElevatedButton(
@@ -347,10 +391,12 @@ class _DeliveryPageState extends State<DeliveryPage> {
     required TextEditingController controller,
     required String hintText,
     TextInputType keyboardType = TextInputType.text,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       decoration: InputDecoration(
         prefixIcon: const Icon(
           Icons.edit,

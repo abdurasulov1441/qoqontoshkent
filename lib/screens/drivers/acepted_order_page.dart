@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:qoqontoshkent/screens/drivers/account_screen.dart';
 import 'package:qoqontoshkent/style/app_colors.dart';
 import 'package:qoqontoshkent/style/app_style.dart';
+import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
 
 class AcceptedOrdersPage extends StatefulWidget {
   const AcceptedOrdersPage({super.key});
@@ -79,6 +80,20 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
     });
 
     _showSnackBar('Buyurtma yakunlandi va hisobotga qo\'shildi');
+  }
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber.replaceAll(
+          RegExp(r'[^\d+]'), ''), // Remove extra characters
+    );
+    await launchUrl(launchUri);
+    if (await canLaunchUrl(launchUri)) {
+      await launchUrl(launchUri);
+    } else {
+      _showSnackBar('Telefon qo\'ng\'irog\'ini amalga oshirib bo\'lmadi');
+    }
   }
 
   void _showSnackBar(String message) {
@@ -156,7 +171,19 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                       orderType == 'taksi'
                           ? Text('Odamlar soni: ${orderData['peopleCount']}')
                           : Text('Dostavka: ${orderData['itemDescription']}'),
-                      Text('Telefon: ${orderData['phoneNumber']}'),
+                      Row(
+                        children: [
+                          Text('Telefon: ${orderData['phoneNumber']}'),
+                          IconButton(
+                            icon: Icon(
+                              Icons.phone,
+                              color: Colors.green,
+                            ),
+                            onPressed: () =>
+                                _makePhoneCall(orderData['phoneNumber']),
+                          ),
+                        ],
+                      ),
                       Text(
                           'Ketish vaqti: ${DateFormat('yyyy-MM-dd – HH:mm').format(orderTimeInUtcPlus5)}'),
                       const SizedBox(height: 10),
