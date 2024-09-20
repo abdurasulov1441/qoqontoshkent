@@ -56,6 +56,8 @@ dependencies:
   url_launcher: ^6.3.0
   d_chart: ^2.8.0
   fl_chart: ^0.69.0
+  flutter_svg: ^2.0.10+1
+  flutter_dismissible_tile: ^1.0.3
 
 dev_dependencies:
   flutter_test:
