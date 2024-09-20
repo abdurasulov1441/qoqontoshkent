@@ -188,6 +188,7 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                           'Ketish vaqti: ${DateFormat('yyyy-MM-dd – HH:mm').format(orderTimeInUtcPlus5)}'),
                       const SizedBox(height: 10),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
                             onPressed: () => _rejectOrder(order.id),
@@ -195,10 +196,28 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                               shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15))),
-                              backgroundColor: Colors.red,
+                              backgroundColor: AppColors.taxi,
                             ),
                             child: Text(
                               'Qaytarish',
+                              style: AppStyle.fontStyle.copyWith(
+                                  fontSize: 12,
+                                  color: AppColors.headerColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: () =>
+                                _makePhoneCall(orderData['phoneNumber']),
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))),
+                              backgroundColor: AppColors.taxi,
+                            ),
+                            child: Text(
+                              'Bog\'lanish',
                               style: AppStyle.fontStyle.copyWith(
                                   fontSize: 12,
                                   color: AppColors.headerColor,
@@ -213,7 +232,7 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                               shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15))),
-                              backgroundColor: Colors.green,
+                              backgroundColor: Colors.red,
                             ),
                             child: Text(
                               'Yakunlash',

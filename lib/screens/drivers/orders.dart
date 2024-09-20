@@ -37,7 +37,7 @@ class _OrdersState extends State<Orders> {
       final orderSnapshot = await transaction.get(orderRef);
 
       if (orderSnapshot.exists && orderSnapshot['status'] == 'pending') {
-        // Update the order status and assign it to the current driver
+        // Обновляем статус заказа и назначаем водителя
         transaction.update(orderRef, {
           'status': 'accepted',
           'driverId': _user!.uid,
@@ -72,7 +72,8 @@ class _OrdersState extends State<Orders> {
           style: AppStyle.fontStyle.copyWith(
               color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: AppColors.taxi,
+
+        backgroundColor: AppColors.taxi, // Прозрачный фон для AppBar
         actions: [
           IconButton(
             onPressed: () {
@@ -112,9 +113,8 @@ class _OrdersState extends State<Orders> {
               final orderTimeInUtcPlus5 = orderTime.add(Duration(hours: 5));
 
               return Card(
-                color: Colors.white,
-                elevation: 5,
                 margin: const EdgeInsets.all(10.0),
+                elevation: 5,
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
