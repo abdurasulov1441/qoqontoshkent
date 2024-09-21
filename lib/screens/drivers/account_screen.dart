@@ -90,11 +90,6 @@ class _AccountScreenState extends State<AccountScreen> {
           }
 
           // Подготовка данных для диаграммы
-          final pieData = [
-            {'domain': 'Buyurtmalar', 'measure': totalOrders.toDouble()},
-            {'domain': 'Odamlar', 'measure': totalPeople.toDouble()},
-            {'domain': 'Dostavka', 'measure': totalDeliveries.toDouble()},
-          ];
           List<NumericData> numericDataList = [
             NumericData(
                 domain: 1, measure: totalOrders, color: Colors.red[300]),

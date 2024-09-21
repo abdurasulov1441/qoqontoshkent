@@ -17,6 +17,9 @@ class AcceptedOrdersPage extends StatefulWidget {
 class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late User? _user;
+  Map<String, bool> _loadingReject = {}; // To track loading state for Qaytarish
+  Map<String, bool> _loadingFinalize =
+      {}; // To track loading state for Yakunlash
 
   @override
   void initState() {
@@ -25,6 +28,10 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
   }
 
   Future<void> _rejectOrder(String orderId) async {
+    setState(() {
+      _loadingReject[orderId] = true;
+    });
+
     final orderRef =
         FirebaseFirestore.instance.collection('orders').doc(orderId);
     final driverRef =
@@ -47,10 +54,17 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
     });
 
     _showSnackBar('Buyurtma bekor qilindi');
+    setState(() {
+      _loadingReject[orderId] = false;
+    });
   }
 
   Future<void> _finalizeOrder(
       String orderId, Map<String, dynamic> orderData) async {
+    setState(() {
+      _loadingFinalize[orderId] = true;
+    });
+
     final statsRef = FirebaseFirestore.instance.collection('orderStatistics');
     final orderRef =
         FirebaseFirestore.instance.collection('orders').doc(orderId);
@@ -80,6 +94,9 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
     });
 
     _showSnackBar('Buyurtma yakunlandi va hisobotga qo\'shildi');
+    setState(() {
+      _loadingFinalize[orderId] = false;
+    });
   }
 
   Future<void> _makePhoneCall(String phoneNumber) async {
@@ -191,20 +208,29 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
-                            onPressed: () => _rejectOrder(order.id),
+                            onPressed: _loadingReject[order.id] == true
+                                ? null
+                                : () => _rejectOrder(order.id),
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15))),
                               backgroundColor: AppColors.taxi,
                             ),
-                            child: Text(
-                              'Qaytarish',
-                              style: AppStyle.fontStyle.copyWith(
-                                  fontSize: 12,
-                                  color: AppColors.headerColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                            child: _loadingReject[order.id] == true
+                                ? const SizedBox(
+                                    height: 15,
+                                    width: 15,
+                                    child: CircularProgressIndicator(
+                                        color: Colors.white, strokeWidth: 2),
+                                  )
+                                : Text(
+                                    'Qaytarish',
+                                    style: AppStyle.fontStyle.copyWith(
+                                        fontSize: 12,
+                                        color: AppColors.headerColor,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                           ),
                           const SizedBox(width: 10),
                           ElevatedButton(
@@ -226,21 +252,29 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                           ),
                           const SizedBox(width: 10),
                           ElevatedButton(
-                            onPressed: () =>
-                                _finalizeOrder(order.id, orderData),
+                            onPressed: _loadingFinalize[order.id] == true
+                                ? null
+                                : () => _finalizeOrder(order.id, orderData),
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15))),
                               backgroundColor: Colors.red,
                             ),
-                            child: Text(
-                              'Yakunlash',
-                              style: AppStyle.fontStyle.copyWith(
-                                  fontSize: 12,
-                                  color: AppColors.headerColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                            child: _loadingFinalize[order.id] == true
+                                ? const SizedBox(
+                                    height: 15,
+                                    width: 15,
+                                    child: CircularProgressIndicator(
+                                        color: Colors.white, strokeWidth: 2),
+                                  )
+                                : Text(
+                                    'Yakunlash',
+                                    style: AppStyle.fontStyle.copyWith(
+                                        fontSize: 12,
+                                        color: AppColors.headerColor,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                           ),
                         ],
                       ),

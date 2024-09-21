@@ -76,13 +76,21 @@ class StatisticsPage extends StatelessWidget {
 
           return ListView(
             children: userOrderData.entries.map((entry) {
+              // Extracting the part before '@' from the email
+              String username = entry.key.split('@').first;
+
+              // Capitalizing the first letter of the username
+              if (username.isNotEmpty) {
+                username = username[0].toUpperCase() + username.substring(1);
+              }
+
               return Card(
                 color: Colors.white,
                 elevation: 5,
                 margin: const EdgeInsets.all(10.0),
                 child: ListTile(
                   title: Text(
-                    'Foydalanuvchi: ${entry.key}',
+                    'Foydalanuvchi: $username',
                     style: AppStyle.fontStyle.copyWith(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
